@@ -3,6 +3,9 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
 import time
 
+receivers = input("Вставьте ссылки получателей через запятую без пробелов: ").split(",")
+message = input("Введите сообщение: ")
+
 url = ["https://vk.com/stillmortal",
        "/html/body/div[3]/div/div/div[2]/div[1]/div/div[1]/button[1]",
        "/html/body/div[14]/div/div/div/div[3]/div/div/div[2]/div[1]/div/div/section/div/div/div/div/div/div[2]/div/button[1]/span/span",
@@ -14,13 +17,13 @@ url = ["https://vk.com/stillmortal",
        "/html/body/div[1]/div/div/div/div/div[1]/div[1]/div/div/div/div/form/div[2]/button[1]/span",
        ]
 
-url_send = ["/html/body/div[4]/div/div/div[2]/div[2]/div[3]/div/div[2]/div/div/div/div/div/div[2]/div[2]/div[2]/div/div[2]/div/div/div/div[2]/a/span",
-            "/html/body/div[12]/div/div[2]/div/div[2]/div/div[4]/div[3]",
-            "/html/body/div[12]/div/div[2]/div/div[2]/div/div[7]/button/span/span"]
+url_send = ["//*[@id='mail_box_editable']",
+            "//*[@id='mail_box_send']/span/span"]
 
-receiver = "https://vk.com/stillmortal"
-message = "Hello, kak dela"
+friend = "//*[@id='profile_redesigned']/div/div/div/div[2]/div[2]/div[2]/div/div[2]/div/div/div/div[1]/a/span/span"
+not_friend = "#profile_redesigned > div > div > div > div.ProfileHeader.ProfileHeader--withSnowballs > div.ProfileHeader__in > div.ProfileHeader__wrapper > div > div.ProfileHeader__actions > div > div > div > div:nth-child(2) > a > span > span > svg"
 
+# entrance
 browser = webdriver.Chrome()
 browser.maximize_window()
 
@@ -66,21 +69,27 @@ search.click()
 
 time.sleep(5)
 
-browser.get(receiver)
+# messages
+for receiver in receivers:
+    browser.get(receiver)
 
-time.sleep(5)
+    time.sleep(5)
 
-search = browser.find_element(By.XPATH, url_send[0])
-search.click()
+    try:
+        search = browser.find_element(By.CSS_SELECTOR, not_friend)
+        search.click()
+    except Exception:
+        search = browser.find_element(By.XPATH, friend)
+        search.click()
 
-time.sleep(5)
+    time.sleep(5)
 
-search = browser.find_element(By.XPATH, url_send[1])
-search.send_keys(message)
+    search = browser.find_element(By.XPATH, url_send[0])
+    search.send_keys(message)
 
-time.sleep(5)
+    time.sleep(5)
 
-search = browser.find_element(By.XPATH, url_send[2])
-search.click()
+    search = browser.find_element(By.XPATH, url_send[1])
+    search.click()
 
 time.sleep(1000)
