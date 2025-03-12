@@ -3,12 +3,14 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 
 
+dt = [int(i) for i in input("Введите дату отправки в формате mm:dd ").split(":")]
 tm = [int(i) for i in input("Введите время отправки в формате hh:mm:ss: ").split(":")]
 receivers = input("Вставьте ссылки получателей через запятую без пробелов: ").split(",")
 message = input("Введите сообщение: ")
 
 while True:
-    if tm[0] == time.localtime().tm_hour and tm[1] == time.localtime().tm_min and tm[2] == time.localtime().tm_sec:
+    if (tm[0] == time.localtime().tm_hour and tm[1] == time.localtime().tm_min and tm[2] == time.localtime().tm_sec\
+            and dt[0] == time.localtime().tm_mon and dt[1] == time.localtime().tm_mday):
         urls = ["https://vk.com/?to=c3RpbGxtb3J0YWw-",
                "/html/body/div[14]/div/div/div/div[3]/div/div/div[2]/div[1]/div/div/section/div/div/div/div/div/div[2]/div/button[1]/span/span",
                "/html/body/div[14]/div/div/div/div[3]/div/div/div[2]/div[1]/div/div/section/div/div/div/div/div/form/div[1]/div[3]/span/div/div[2]/input",
@@ -68,7 +70,7 @@ while True:
 
         time.sleep(5)
 
-        # messages
+        # sending
         for receiver in receivers:
             browser.get(receiver)
 
